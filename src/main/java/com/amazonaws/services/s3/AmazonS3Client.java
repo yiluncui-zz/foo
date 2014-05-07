@@ -1352,13 +1352,17 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                 metadata.setContentType(Mimetypes.getInstance().getMimetype(file));
             }
 
-            if (!skipContentMd5Check) {
+            if (metadata.getContentMD5() != null) {
+                FileInputStream fileInputStream = null;
                 try {
-                    String contentMd5_b64 = Md5Utils.md5AsBase64(file);
-                    metadata.setContentMD5(contentMd5_b64);
+                    fileInputStream = new FileInputStream(file);
+                    byte[] md5Hash = Md5Utils.computeMD5Hash(fileInputStream);
+                    metadata.setContentMD5(BinaryUtils.toBase64(md5Hash));
                 } catch (Exception e) {
                     throw new AmazonClientException(
                             "Unable to calculate MD5 hash: " + e.getMessage(), e);
+                } finally {
+                    try {fileInputStream.close();} catch (Exception e) {}
                 }
             }
 
@@ -3819,5 +3823,10 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         // https://github.com/aws/aws-sdk-java/pull/215
         // http://aws.amazon.com/articles/1109#14
         req.addHeader(Headers.CONTENT_LENGTH, String.valueOf(0));
+<<<<<<< HEAD
     }
 }
+=======
+   }
+}
+>>>>>>> c76e56a... Only calculate the MD5 from a file if it wasn't provided in the metadata
