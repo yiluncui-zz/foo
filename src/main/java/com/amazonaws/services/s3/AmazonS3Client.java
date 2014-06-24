@@ -1236,7 +1236,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                 return !skipContentMd5IntegrityCheck(getObjectRequest);
             }
 
-        });
+        }, ServiceUtils.OVERWRITE_MODE);
         // getObject can return null if constraints were specified but not met
         if (s3Object == null) return null;
 
@@ -1347,13 +1347,14 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             // Always set the content length, even if it's already set
             metadata.setContentLength(file.length());
 
+            final boolean calculateMD5 = metadata.getContentMD5() == null;
+
             // Only set the content type if it hasn't already been set
             if (metadata.getContentType() == null) {
                 metadata.setContentType(Mimetypes.getInstance().getMimetype(file));
             }
 
-            if (metadata.getContentMD5() != null) {
-                FileInputStream fileInputStream = null;
+            if (calculateMD5 && !skipContentMd5Check) {
                 try {
                     fileInputStream = new FileInputStream(file);
                     byte[] md5Hash = Md5Utils.computeMD5Hash(fileInputStream);
@@ -3824,9 +3825,14 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         // http://aws.amazon.com/articles/1109#14
         req.addHeader(Headers.CONTENT_LENGTH, String.valueOf(0));
 <<<<<<< HEAD
+<<<<<<< HEAD
     }
 }
 =======
    }
 }
 >>>>>>> c76e56a... Only calculate the MD5 from a file if it wasn't provided in the metadata
+=======
+    }
+}
+>>>>>>> 9d820df... AWS SDK for Java 1.8.0
