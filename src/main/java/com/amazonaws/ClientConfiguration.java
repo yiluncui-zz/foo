@@ -63,6 +63,11 @@ public class ClientConfiguration {
     public static final boolean DEFAULT_USE_REAPER = true;
 
     /**
+     * The default on whether to use gzip compression.
+     */
+    public static final boolean DEFAULT_USE_GZIP = false;
+
+    /**
      * The default expiration time (in milliseconds) for a connection in the
      * connection pool.
      */
@@ -154,6 +159,11 @@ public class ClientConfiguration {
      * permissions are not allowed.
      */
     private boolean useReaper = DEFAULT_USE_REAPER;
+
+    /**
+     * Optional whether to use gzip compression when making HTTP requests.
+     */
+    private boolean useGzip = DEFAULT_USE_GZIP;
 
     /**
      * Optional override to control which signature algorithm should be used to
@@ -767,6 +777,34 @@ public class ClientConfiguration {
      */
     public ClientConfiguration withReaper(boolean use) {
         setUseReaper(use);
+        return this;
+    }
+
+    /**
+     * Checks if gzip compression is used
+     *
+     * @return if gzip compression is used
+     */
+    public boolean useGzip() {
+        return useGzip;
+    }
+
+    /**
+     * Sets whether gzip compression should be used
+     *
+     * @param use whether gzip compression should be used
+     */
+    public void setUseGzip(boolean use) {
+        this.useGzip = use;
+    }
+
+    /**
+     * Sets whether gzip compression should be used
+     *
+     * @param use whether gzip compression should be used
+     */
+    public ClientConfiguration withGzip(boolean use) {
+        setUseGzip(use);
         return this;
     }
 
